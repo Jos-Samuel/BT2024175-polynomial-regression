@@ -1,0 +1,46 @@
+BT2024175 - COMPLETED POLYNOMIAL REGRESSION
+
+All five outer folds and three-fold inner searches completed for both datasets.
+
+BEST MODEL FOR VAR1
+Pipeline(steps=[('input_scaler', StandardScaler()),
+                ('polynomial',
+                 PolynomialFeatures(degree=5, include_bias=False)),
+                ('term_scaler', StandardScaler()),
+                ('regression',
+                 Lasso(alpha=0.01, fit_intercept=False, max_iter=100,
+                       tol=1.0000000000000002e-06, warm_start=True))])
+Selected model: LASSO
+Polynomial degree: 5
+Alpha: 0.01
+L1 ratio: not applicable
+Selection CV MSE: 0.35518671
+Selection CV R2: 0.96839882
+Nested outer MSE: 0.33740435 +/- 0.04907275
+Nested outer R2: 0.96984682 +/- 0.00314390
+Polynomial terms: 461; nonzero coefficients: 119
+Prediction CSV: BT2024175_pred-var1.csv (1000 rows, y column)
+
+BEST MODEL FOR VAR2
+Pipeline(steps=[('input_scaler', StandardScaler()),
+                ('polynomial',
+                 PolynomialFeatures(degree=11, include_bias=False)),
+                ('term_scaler', StandardScaler()),
+                ('regression',
+                 ElasticNet(alpha=0.001, fit_intercept=False, l1_ratio=0.3,
+                            max_iter=100, tol=1.0000000000000002e-06,
+                            warm_start=True))])
+Selected model: ElasticNet
+Polynomial degree: 11
+Alpha: 0.001
+L1 ratio: 0.3
+Selection CV MSE: 0.26367089
+Selection CV R2: 0.99396573
+Nested outer MSE: 0.27880070 +/- 0.03654050
+Nested outer R2: 0.99344354 +/- 0.00174932
+Polynomial terms: 363; nonzero coefficients: 233
+Prediction CSV: BT2024175_pred-var2.csv (1000 rows, y column)
+
+VERIFIED: Saved models reproduce both prediction CSVs; all ten outer-fold scores match saved predictions.
+No models were retrained and all existing output files were preserved byte-for-byte.
+Outer scores evaluate the selection procedure. Best means lowest CV MSE among eligible searched candidates.

@@ -1,0 +1,41 @@
+{
+  "data_sha256": "abf308324f31d149a36f4c4ef3e5c5804f42bab3c03deb653af66a1421a1def6",
+  "max_degree": 20,
+  "inner_folds": 3,
+  "outer_folds": 5,
+  "seed": 175,
+  "ratios": [
+    0.1,
+    0.3,
+    0.5,
+    0.7,
+    0.9,
+    0.95
+  ],
+  "alphas": [
+    1e-06,
+    1e-05,
+    0.0001,
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0,
+    1000.0,
+    10000.0,
+    100000.0,
+    1000000.0
+  ],
+  "tolerance": 1e-05,
+  "python": "3.12.6",
+  "sklearn": "1.9.1",
+  "scipy": "1.18.1",
+  "numpy": "2.5.3",
+  "skglm": "0.5",
+  "algorithm_version": 3,
+  "coarse_max_iter": 10,
+  "coarse_max_epochs": 500,
+  "retry_max_iter": 50,
+  "retry_max_epochs": 10000
+}
