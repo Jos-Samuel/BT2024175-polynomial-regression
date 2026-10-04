@@ -1,15 +1,16 @@
 {
   "status": "passed",
-  "no_experiments_restarted": true,
+  "script": "verify_results.py",
+  "no_models_retrained": true,
   "variants": [
     {
       "variant": 1,
+      "training_rows": 1000,
       "test_rows": 1000,
       "outer_folds_verified": 5,
       "all_training_rows_evaluated_once": true,
       "polynomial_terms": 461,
       "nonzero_coefficients": 119,
-      "final_model_kkt_residual": 7.170864491333473e-07,
       "searches": {
         "final_search": {
           "candidate_rows": 1112,
@@ -51,12 +52,12 @@
     },
     {
       "variant": 2,
+      "training_rows": 1000,
       "test_rows": 1000,
       "outer_folds_verified": 5,
       "all_training_rows_evaluated_once": true,
       "polynomial_terms": 363,
       "nonzero_coefficients": 233,
-      "final_model_kkt_residual": 1.0017646582620421e-06,
       "searches": {
         "final_search": {
           "candidate_rows": 2158,
@@ -97,13 +98,14 @@
       }
     }
   ],
-  "existing_files_preserved": 279,
-  "existing_file_sha256": {
-    "train_polynomial.py": "b94622bcb2967b2b74b0e01fe16d9ff241f97d52fab1457d5375366943b958c4",
+  "tracked_file_sha256": {
+    "README.md": "ca7607cc16f9048a55d4bbee5e0b4c5e585eb5070ad5de443b90b1a4de2be312",
+    "train_polynomial.py": "de0aa9ca3100ed628a572c4dc7130df540c568aa8c80b6b34b0eac841614ae67",
+    "predict.py": "3994841700a8153daa08f4277e3e37e6bb94867dbeab553962114d348570cfe4",
     "requirements.txt": "3b0bdda72f164ba191a6ec37506d1b189522a227182afa5145de45ad975e0661",
-    "README.md": "cf80f75df9659d2f8661ddef2d1d7f315865b0572ae7603c2ea6be05cc0934d3",
-    "results\\BT2024175_pred-var1.csv": "64198eb1c83ac519bc9fe3a24843ff71aa8ddc81229c523394a03b5cb12e6343",
-    "results\\BT2024175_pred-var2.csv": "3519ec5c3df06bb99e1c2b9758fa1331f637709b071c981808843f0fa55b5e33",
+    "verify_results.py": "8964086075761c9f4018c737034b99530569d959db163f833f9eecdfd4be8a5f",
+    "results\\BT2024175_pred_var1.csv": "64198eb1c83ac519bc9fe3a24843ff71aa8ddc81229c523394a03b5cb12e6343",
+    "results\\BT2024175_pred_var2.csv": "3519ec5c3df06bb99e1c2b9758fa1331f637709b071c981808843f0fa55b5e33",
     "results\\summary.json": "f39d34ca80e50795b5d31493f7f9c8f11b0f11cf18f19377687a91063cf73385",
     "results\\training.log": "b16517fcc1c4affa6fc587b9c8ca4a9f6c8489ac0ad1b4cc7dd35ec07ec5c187",
     "results\\var1\\best_model.joblib": "5447f3e4b4df388b8e14a040208678d892537f333f101a537f01cbeed36c988b",

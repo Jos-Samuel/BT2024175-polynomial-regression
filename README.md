@@ -13,9 +13,9 @@ The personalized input datasets are not distributed here; place your supplied CS
 After installing the pinned requirements, run these commands from this repository:
 
 ```powershell
-python predict.py --variant 1 --input "data/BT2024175_test_var1.csv" --output "predictions/BT2024175_pred_var1.csv"
-python predict.py --variant 2 --input "data/BT2024175_test_var2.csv" --output "predictions/BT2024175_pred_var2.csv"
-python train_polynomial.py --show-results
+.\.venv\Scripts\python.exe predict.py --variant 1 --input "data/BT2024175_test_var1.csv" --output "predictions/BT2024175_pred_var1.csv"
+.\.venv\Scripts\python.exe predict.py --variant 2 --input "data/BT2024175_test_var2.csv" --output "predictions/BT2024175_pred_var2.csv"
+.\.venv\Scripts\python.exe train_polynomial.py --show-results
 ```
 
 Inference validates feature names/order and finite values, prints the loaded model, and exports a single `y` column without an index. It refuses to overwrite an existing prediction file. No fitting is performed. Load only trusted model files.
@@ -35,6 +35,12 @@ The final `FINAL WINNERS` section prints both winners and their nested CV scores
 The command above writes a fresh run to `rerun_results`, preserving the included completed experiments. Without `--output-dir`, outputs default to `results` beside the script; do not retrain into that directory if you want to preserve the archived results. Run `--help` for options.
 `--check-only` verifies the optimized Ridge calculation and grouped fold isolation.
 `--show-results` prints the saved best models and available scores without retraining.
+`verify_results.py` performs a read-only audit of the saved models, predictions, nested-fold
+coverage, grouped isolation, search records and pruning bounds:
+
+```powershell
+.\.venv\Scripts\python.exe verify_results.py --data-dir "$env:USERPROFILE\Downloads"
+```
 For an explicitly shorter run, `--selection-only` performs the model search,
 fits and prints the winners, and exports predictions, but omits outer evaluation.
 Its scores are model-selection scores and must not be described as independent
