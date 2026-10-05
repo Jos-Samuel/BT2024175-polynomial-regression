@@ -95,6 +95,13 @@ Expected selections: degree-5 LASSO with alpha 0.01 for var1, and degree-11 Elas
 with alpha 0.001 and L1 mixing ratio 0.3 for var2. This command displays the saved results;
 it does not train the models. The completed submission CSVs also remain available in `results`.
 
+The training script performs two kinds of fitting. During cross-validation, temporary
+models are fitted separately inside each training fold to compare candidate settings.
+After the winning degree and regularization settings are selected, the script fits one
+final model on all 1,000 labelled training rows for that variant and saves it as
+`results/var1/best_model.joblib` or `results/var2/best_model.joblib`.
+The prediction script loads those saved models and does not fit them again.
+
 ## Optional: train both models from scratch
 
 Complete steps 1–4 first. Download the original training CSVs for BT2024175 to Downloads,
@@ -111,13 +118,6 @@ This command runs the complete search and five-fold outer evaluation for both da
 It can take substantially longer than prediction. Progress appears in the terminal and
 `rerun_results/training.log`; the final `FINAL WINNERS` section prints both winners and scores.
 Use `--workers 1` on a machine with limited memory.
-
-The training script performs two kinds of fitting. During cross-validation, temporary
-models are fitted separately inside each training fold to compare candidate settings.
-After the winning degree and regularization settings are selected, the script fits one
-final model on all 1,000 labelled training rows for that variant and saves it as
-`rerun_results/var1/best_model.joblib` or `rerun_results/var2/best_model.joblib`.
-The prediction script loads those saved models and does not fit them again.
 
 The new models, prediction CSVs and validation records are written to `rerun_results`.
 Keep that separate from the included `results` directory. To display the new results after
