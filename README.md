@@ -8,43 +8,150 @@ Completed nested CV selected degree-5 LASSO for var1 and degree-11 Elastic Net f
 Submission files are [var1](results/BT2024175_pred_var1.csv) and [var2](results/BT2024175_pred_var2.csv).
 The personalized input datasets are not distributed here; place your supplied CSVs in a local data directory.
 
-## Inference with the saved models
+## Quick start (Windows PowerShell)
 
-After installing the pinned requirements, run these commands from this repository:
+Follow steps 1–6 in order. Run each command on its own line, and continue only if it succeeds.
+The saved models are included, so you can generate predictions without waiting for training.
+These commands are for Windows PowerShell, not Command Prompt or a Python prompt.
+
+### 1. Check the prerequisites
+
+Install Git and 64-bit Python 3.12, including the Windows Python launcher, before starting.
+Open a new PowerShell window after installation and check:
 
 ```powershell
-.\.venv\Scripts\python.exe predict.py --variant 1 --input "data/BT2024175_test_var1.csv" --output "predictions/BT2024175_pred_var1.csv"
-.\.venv\Scripts\python.exe predict.py --variant 2 --input "data/BT2024175_test_var2.csv" --output "predictions/BT2024175_pred_var2.csv"
+git --version
+py -3.12 --version
+```
+
+The second command must print Python 3.12.x. If either command is not found, finish installing
+that prerequisite before continuing. This project uses the versions pinned in `requirements.txt`.
+
+### 2. Clone the repository and enter its folder
+
+Run this from a directory where you want to keep the project:
+
+```powershell
+git clone https://github.com/Jos-Samuel/BT2024175-polynomial-regression.git
+cd .\BT2024175-polynomial-regression
+Get-Item .\requirements.txt, .\predict.py, .\train_polynomial.py
+```
+
+If you already cloned the repository, open PowerShell in that existing repository folder
+and skip the clone command. All remaining commands must run from the folder containing
+`README.md`, `predict.py`, and `requirements.txt`.
+
+### 3. Create the Python environment and install packages
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+```
+
+Wait for installation to finish. The final command should report no broken requirements.
+Every command below uses this environment explicitly; activation is unnecessary.
+
+### 4. Copy the supplied test datasets into the project
+
+The input datasets are not included in GitHub. Download the two original test CSVs supplied
+for roll number BT2024175 into your Windows `Downloads` folder, keeping their filenames.
+Then run:
+
+```powershell
+New-Item -ItemType Directory -Force .\data | Out-Null
+Copy-Item -LiteralPath "$env:USERPROFILE\Downloads\BT2024175_test_var1.csv" -Destination .\data\
+Copy-Item -LiteralPath "$env:USERPROFILE\Downloads\BT2024175_test_var2.csv" -Destination .\data\
+Get-Item .\data\BT2024175_test_var1.csv, .\data\BT2024175_test_var2.csv
+```
+
+If your Downloads folder is redirected or the files are elsewhere, replace the source paths
+in the two `Copy-Item` commands with their actual locations. var1 must have columns
+`x1,x2,x3,x4,x5,x6`; var2 must have `x1,x2,x3`, in that order. Test files must not contain `y`.
+
+### 5. Generate predictions for both datasets
+
+Run all three lines in the same PowerShell window:
+
+```powershell
+$predictionDir = Join-Path "predictions" (Get-Date -Format "yyyyMMdd_HHmmss_fff")
+.\.venv\Scripts\python.exe predict.py --variant 1 --input ".\data\BT2024175_test_var1.csv" --output "$predictionDir\BT2024175_pred_var1.csv"
+.\.venv\Scripts\python.exe predict.py --variant 2 --input ".\data\BT2024175_test_var2.csv" --output "$predictionDir\BT2024175_pred_var2.csv"
+```
+
+Each command prints the loaded model and the output path. Both CSVs go into the same dated
+subfolder under `predictions`, with the required submission filenames and one `y` column.
+For the supplied test sets, each file has 1,000 predictions in the original row order.
+Run all three lines again to generate another pair in a new subfolder.
+`predict.py` refuses to overwrite an existing output. Only load trusted model files.
+
+### 6. Print the saved best models and scores
+
+```powershell
 .\.venv\Scripts\python.exe train_polynomial.py --show-results
 ```
 
-Inference validates feature names/order and finite values, prints the loaded model, and exports a single `y` column without an index. It refuses to overwrite an existing prediction file. No fitting is performed. Load only trusted model files.
+Expected selections: degree-5 LASSO with alpha 0.01 for var1, and degree-11 Elastic Net
+with alpha 0.001 and L1 mixing ratio 0.3 for var2. This command displays the saved results;
+it does not train the models. The completed submission CSVs also remain available in `results`.
 
-## Run
+## Optional: train both models from scratch
 
-Use Python 3.12 or another version compatible with `requirements.txt`.
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe train_polynomial.py --data-dir "$env:USERPROFILE\Downloads" --output-dir rerun_results
-```
-
-The script prints progress and the selected model for each dataset in the terminal.
-The final `FINAL WINNERS` section prints both winners and their nested CV scores.
-The command above writes a fresh run to `rerun_results`, preserving the included completed experiments. Without `--output-dir`, outputs default to `results` beside the script; do not retrain into that directory if you want to preserve the archived results. Run `--help` for options.
-`--check-only` verifies the optimized Ridge calculation and grouped fold isolation.
-`--show-results` prints the saved best models and available scores without retraining.
-`verify_results.py` performs a read-only audit of the saved models, predictions, nested-fold
-coverage, grouped isolation, search records and pruning bounds:
+Complete steps 1–4 first. Download the original training CSVs for BT2024175 to Downloads,
+then copy them into `data`:
 
 ```powershell
-.\.venv\Scripts\python.exe verify_results.py --data-dir "$env:USERPROFILE\Downloads"
+Copy-Item -LiteralPath "$env:USERPROFILE\Downloads\BT2024175_train_var1.csv" -Destination .\data\
+Copy-Item -LiteralPath "$env:USERPROFILE\Downloads\BT2024175_train_var2.csv" -Destination .\data\
+.\.venv\Scripts\python.exe train_polynomial.py --data-dir .\data --output-dir .\rerun_results
 ```
-For an explicitly shorter run, `--selection-only` performs the model search,
-fits and prints the winners, and exports predictions, but omits outer evaluation.
-Its scores are model-selection scores and must not be described as independent
-nested-CV performance estimates. The default still runs the complete nested plan.
+
+Training files must contain the corresponding input columns followed by `y`.
+This command runs the complete search and five-fold outer evaluation for both datasets.
+It can take substantially longer than prediction. Progress appears in the terminal and
+`rerun_results/training.log`; the final `FINAL WINNERS` section prints both winners and scores.
+Use `--workers 1` on a machine with limited memory.
+
+The new models, prediction CSVs and validation records are written to `rerun_results`.
+Keep that separate from the included `results` directory. To display the new results after
+training finishes:
+
+```powershell
+.\.venv\Scripts\python.exe train_polynomial.py --output-dir .\rerun_results --show-results
+```
+
+To use these newly trained models with the prediction commands in step 5, add
+`--model-dir .\rerun_results` to each command. Without that option, prediction uses the
+original included models in `results`.
+
+`--selection-only` skips outer evaluation for a shorter training run. Its tuning scores
+are not independent nested-CV performance estimates. `--check-only` checks the optimized
+Ridge calculation and grouped-fold isolation without running the full search.
+
+## Optional: verify the included results
+
+This requires all four original CSVs in `data`, including the training files copied above.
+It checks the included `results` directory, not `rerun_results`:
+
+```powershell
+.\.venv\Scripts\python.exe verify_results.py --data-dir .\data --output .\verification_local.json
+```
+
+The script checks saved predictions, outer-fold coverage and scores, group isolation,
+search-record accounting, and the arithmetic of recorded pruning bounds. It writes a local
+verification report without retraining. This check does not rerun the complete experiment
+or reproduce an exhaustive-versus-pruned search comparison.
+
+## Troubleshooting
+
+- **`.venv\Scripts\python.exe` is not recognized:** make sure you are in the repository
+  folder from step 2 and have completed step 3. Check `Test-Path .\.venv\Scripts\python.exe`.
+- **`predict.py` cannot be found:** return to the repository folder, not its parent directory.
+- **A CSV cannot be found:** check step 4 and the actual download location. Input data is
+  supplied separately from the repository.
+- **An output already exists:** rerun all three lines in step 5 to choose a new output folder.
+- **Missing Python packages:** repeat installation in step 3 and use the explicit
+  `.\.venv\Scripts\python.exe` interpreter for subsequent commands.
 
 ## Method
 
@@ -125,18 +232,6 @@ The coefficient names refer to standardized input variables. Coefficients multip
 standardized polynomial columns; use the saved pipeline for prediction rather than
 applying those coefficients directly to raw inputs. Scalers and the intercept are
 stored in the pipeline. Only load model files from trusted sources.
-
-Example inference after training:
-
-```python
-import joblib
-import pandas as pd
-
-model = joblib.load("results/var1/best_model.joblib")
-test = pd.read_csv("BT2024175_test_var1.csv")
-prediction = model.predict(test.to_numpy(dtype=float))
-print(model)
-```
 
 The supplied test sets contain no targets, so their true MSE/R2 cannot be computed.
 Full-data inner-CV scores are selection scores; nested outer scores are the
