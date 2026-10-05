@@ -112,6 +112,13 @@ It can take substantially longer than prediction. Progress appears in the termin
 `rerun_results/training.log`; the final `FINAL WINNERS` section prints both winners and scores.
 Use `--workers 1` on a machine with limited memory.
 
+The training script performs two kinds of fitting. During cross-validation, temporary
+models are fitted separately inside each training fold to compare candidate settings.
+After the winning degree and regularization settings are selected, the script fits one
+final model on all 1,000 labelled training rows for that variant and saves it as
+`rerun_results/var1/best_model.joblib` or `rerun_results/var2/best_model.joblib`.
+The prediction script loads those saved models and does not fit them again.
+
 The new models, prediction CSVs and validation records are written to `rerun_results`.
 Keep that separate from the included `results` directory. To display the new results after
 training finishes:
